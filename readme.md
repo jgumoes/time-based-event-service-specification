@@ -11,6 +11,15 @@
 
  Another benefit of this specification is that, when combined with a publisher/subscriber protocol, it could allow for simplified synchronised alarms across a number of devices that each have their own widely-different time-based requirements.
 
+ I should point out that there is a good reason why I'm targeting BLE instead of WiFi: my router does not play nicely with smart devices. The failure pattern is as follows:
+  1. The router gets overwhelmed by the number of connected devices and temporarily reverts its credentials back to the factory defaults
+  2.  the smart device only holds one set of credentials so it can no longer connect to the router
+  3.  the smart device gives up trying to connect
+  4.  the router is now connected to fewer devices, and, feeling less overwhelmed, it changes its credentials back to the user-defined ones
+  5.  the smart device doesn't bother trying to connect after long periods of time, it just stays disconnected
+
+Obviously you can program a device to hold multiple WiFi credentials, or when the re-connect threshold is reached increase to re-attempt interval to an hour instead of stopping any further attempts. However, this will result in more WiFi connections for the router, it will be constantly overwhelmed and the connections will be unstable. It would be far better to have devices over a BLE mesh network, with the smartphone acting as an entry point. It's worth point out, though, that the implementation can be communication-agnostic. The same source code could be used for WiFi or Thread, or ZigBee, etc.
+
 # Overview / Theory of Operation
 
 It's probably best to think of this service as relational key-value stores: 
